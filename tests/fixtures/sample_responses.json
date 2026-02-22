@@ -1,0 +1,12 @@
+{
+  "valid_json_response": "Here are the PII detections:\n```json\n[\n  {\"type\": \"PERSON\", \"text\": \"John Smith\", \"start\": 8, \"end\": 18},\n  {\"type\": \"EMAIL_ADDRESS\", \"text\": \"john@email.com\", \"start\": 22, \"end\": 36}\n]\n```",
+  "bare_json_response": "[{\"type\": \"PHONE_NUMBER\", \"text\": \"555-1234\", \"start\": 10, \"end\": 18}]",
+  "no_json_response": "I found some PII in the text. There is a person named John and an email address.",
+  "invalid_json_response": "```json\n{\"not\": \"a list\"}\n```",
+  "tool_call_list_skills": "[TOOL_CALL: list_skills]",
+  "tool_call_view_skill": "[TOOL_CALL: view_skill pii-detection]",
+  "tool_call_analyze_pii": "[TOOL_CALL: analyze_pii]",
+  "lenient_analyze": "I will use the analyze_pii tool to detect PII in this text.",
+  "lenient_list": "Let me list the available skills first.",
+  "no_tool_call": "I'll analyze this text manually and identify the PII entities."
+}

@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this software or its results, please cite it as below."
+authors:
+  - family-names: Rosado
+    given-names: Eidan J.
+    orcid: https://orcid.org/0000-0003-0665-098X
+title: "Does Context Help? An Ablation Study of Agent Skills Injection for PII Detection in Small Language Models"
+version: 0.1.0
+repository-code: "https://github.com/EdyVision/pii-skills-ablation-study"
+keywords:
+  - PII
+  - ablation study
+  - agent skills
+  - small language models
+  - pii-codex
+  - pii detection

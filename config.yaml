@@ -1,0 +1,144 @@
+# PII Agent Skills Ablation Study Configuration
+
+experiment:
+  name: "pii-skills-ablation"
+  prompt_version: "v1"  # Version for prompt templates (increment when improving prompts)
+  seed: 42
+
+  # Adaptive sampling strategy
+  sampling:
+    pilot_n: 200           # Initial pilot to estimate variance
+    target_n: 1000         # Target if CI is acceptable
+    max_n: 2000            # Upper bound if variance is high
+    confidence_level: 0.95 # For confidence interval calculation
+    
+    # Stratification
+    stratify_by:
+      - pii_types          # Which PII types are present
+      - text_length_bin    # short (<500), medium (500-2000), long (>2000 chars)
+
+# Source datasets for compilation (HuggingFace: ai4privacy, nvidia, gretelai)
+source_datasets:
+  ai4privacy:
+    path: "ai4privacy/pii-masking-300k"
+    split: "train"
+    text_column: "source_text"
+    label_column: "privacy_mask"
+
+  nvidia_nemotron_pii:
+    path: "nvidia/Nemotron-PII"
+    split: "train"
+    text_column: "text"
+    label_column: "spans"
+
+  gretel_pii_masking:
+    path: "gretelai/gretel-pii-masking-en-v1"
+    split: "train"
+    text_column: "text"
+    label_column: "entities"
+
+# Benchmark + config in one repo (notebook 1 uploads dataset + config/ files)
+compiled_dataset:
+  repo_id: "EdyVision/pii-skills-ablation"
+  split: "test"
+
+# Config and prompts live in the same repo under config/ (see compiled_dataset.repo_id)
+config_repo:
+  repo_id: "EdyVision/pii-skills-ablation"
+  prompts:
+    - zero_shot.txt
+    - with_docs.txt
+    - with_skills.txt
+
+# Results repo (predictions and scores from experiments)
+results_repo:
+  repo_id: "EdyVision/pii-skills-ablation-results"
+# Open models for local inference (max tokens selected for fair comparison)
+models:
+  gemma2_9b:
+    hf_id: "google/gemma-2-9b-it"
+    mlx_id: "mlx-community/gemma-2-9b-it-4bit"
+    max_tokens: 2048
+
+  llama3_8b:
+    hf_id: "meta-llama/Meta-Llama-3.1-8B-Instruct"
+    mlx_id: "mlx-community/Meta-Llama-3.1-8B-Instruct-4bit"
+    max_tokens: 2048
+  
+  mistral_7b:
+    hf_id: "mistralai/Mistral-7B-Instruct-v0.3"
+    mlx_id: "mlx-community/Mistral-7B-Instruct-v0.3-4bit"
+    max_tokens: 2048
+
+  qwen2_7b:
+    hf_id: "Qwen/Qwen2.5-7B-Instruct"
+    mlx_id: "mlx-community/Qwen2.5-7B-Instruct-4bit"
+    max_tokens: 2048
+
+# PII-Codex redaction: replacement string passed to PIIAnalysisService(pii_token_replacement_value=...).
+# One string for all types; for per-type placeholders we build sanitized_text_context in the notebook.
+pii:
+  token_replacement: "<REDACTED>"
+
+conditions:
+  - zero_shot
+  - with_docs
+  - with_skills
+  - with_tools
+
+output:
+  results_dir: "results"
+  cache_dir: ".cache"
+
+# Ablation harness: one config, hardware-specific overrides (mlx vs cuda)
+harness:
+  common:
+    max_tokens: 1024
+    max_turns: 5
+    prompts_dir: prompts
+    skills_dir: skills
+    results_dir: results
+    conditions:
+      - zero_shot
+      - with_docs
+      - with_tools
+      - with_skills
+    models:
+      - llama3_8b
+      - mistral_7b
+      - qwen2_7b
+      - gemma2_9b  # last — batch_generate broken for Gemma 2 on MLX (sliding window attention mask bug)
+    model_configs:
+      gemma2_9b:
+        hf: google/gemma-2-9b-it
+        mlx: mlx-community/gemma-2-9b-it-4bit
+      llama3_8b:
+        hf: meta-llama/Meta-Llama-3.1-8B-Instruct
+        mlx: mlx-community/Meta-Llama-3.1-8B-Instruct-4bit
+      mistral_7b:
+        hf: mistralai/Mistral-7B-Instruct-v0.3
+        mlx: mlx-community/Mistral-7B-Instruct-v0.3-4bit
+      qwen2_7b:
+        hf: Qwen/Qwen2.5-7B-Instruct
+        mlx: mlx-community/Qwen2.5-7B-Instruct-4bit
+    seed: 42
+    debug: false
+    run_type: pilot
+    prompt_version: v1
+    label_map_path: config/pii_label_to_piicodex.json
+    push_to_hub: true
+    hub_repo: "EdyVision/pii-skills-ablation-results"
+  mlx:
+    hardware: mlx
+    batch_size: 12
+    batch_size_parallel: 12
+    multi_turn_workers: 1  # 3 can OOM the Jupyter kernel; use 1 in-notebook or run skill conditions via scripts
+    max_seconds_per_sample: 300
+    verbose_skill_loop: true
+  cuda:
+    hardware: cuda
+    batch_size: 12
+    batch_size_parallel: 12
+    multi_turn_workers: 2
+    max_seconds_per_sample: 120
+    verbose_skill_loop: false

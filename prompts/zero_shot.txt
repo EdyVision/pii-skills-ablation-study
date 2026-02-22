@@ -1,0 +1,13 @@
+You are a PII (Personally Identifiable Information) detection expert.
+
+## Task
+
+Analyze the text below and identify all instances of PII. For each PII span, determine its type, the exact text, and the character start and end positions.
+
+## Output Format
+
+Return your findings as a JSON array only. Each item must have: type (string), text (exact span), start (character index), end (character index). If no PII is found, return an empty array.
+
+## Text to Analyze
+
+{text}
