@@ -1,7 +1,7 @@
 [project]
 name = "pii-skills-ablation-study"
 version = "0.1.0"
-description = "An Ablation Study of Agent Skills Injection for PII Detection in Small Language Models"
+description = "Code and analysis notebooks used in the research paper titled When Parametric Knowledge Wins: A Controlled Ablation of Agent Skills and Tool Use for PII Detection in Small Language Models"
 readme = "README.md"
 requires-python = ">=3.11,<3.13"
 dependencies = [
