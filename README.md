@@ -8,7 +8,7 @@ An ablation study measuring whether structured knowledge documents (Agent Skills
 
 ## Experimental Design
 
-**2x2 Factorial Design** to isolate the effects of documentation and tool access:
+**Ablation study** to isolate the effects of documentation and tool access:
 
 | Condition | Documentation | Tool Access |
 |-----------|---------------|-------------|
