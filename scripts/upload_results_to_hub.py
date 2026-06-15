@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Upload results from results/main/ (or results/<run_type>/) to the Hub.
+Upload results from results/past_runs/<run_type>/ (e.g. main, pilot, rr) to the Hub.
 
 Reads experiment_results.json, builds records with a fixed schema so Hub features
 match across splits (scores and error always string to avoid Value('null') inference).
@@ -116,11 +116,17 @@ def main() -> None:
     except ImportError:
         raise SystemExit("pip install datasets")
 
-    exp_path = repo_root / "results" / run_type / "experiment_results.json"
+    # Runs are stored under results/past_runs/<run_type>/ (e.g. main, pilot, rr).
+    # Fall back to the legacy results/<run_type>/ location if past_runs is absent.
+    exp_path = repo_root / "results" / "past_runs" / run_type / "experiment_results.json"
     if not exp_path.exists():
-        raise SystemExit(
-            f"Not found: {exp_path} (use --run-type for a different subdir)."
-        )
+        legacy = repo_root / "results" / run_type / "experiment_results.json"
+        if legacy.exists():
+            exp_path = legacy
+        else:
+            raise SystemExit(
+                f"Not found: {exp_path} (use --run-type for a different subdir)."
+            )
     with open(exp_path) as f:
         results_list = json.load(f)
     if not results_list:

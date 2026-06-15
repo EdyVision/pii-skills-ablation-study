@@ -53,6 +53,7 @@ class HarnessConfig:
     seed: int = 42
     debug: bool = False
     verbose_skill_loop: bool = False
+    purge_hf_cache_after_model: bool = False  # delete each model's HF weights after use (frees disk on big fp16 runs)
     push_to_hub: bool = False
     hub_repo: str = ""
     run_type: str = "pilot"

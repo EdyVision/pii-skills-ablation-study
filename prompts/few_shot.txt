@@ -1,0 +1,24 @@
+You are a PII (Personally Identifiable Information) detection expert.
+
+## Task
+
+Analyze the text below and identify all instances of PII. For each PII span, determine its type, the exact text, and the character start and end positions.
+
+## Output Format
+
+Return your findings as a JSON array only. Each item must have: type (string), text (exact span), start (character index), end (character index). If no PII is found, return an empty array.
+
+## Examples
+
+Text: "Contact John Smith at john.smith@acme.com or 555-0142."
+Output: [{"type": "PERSON", "text": "John Smith", "start": 8, "end": 18}, {"type": "EMAIL_ADDRESS", "text": "john.smith@acme.com", "start": 22, "end": 41}, {"type": "PHONE_NUMBER", "text": "555-0142", "start": 45, "end": 53}]
+
+Text: "She was born on 1990-03-14 and lives in Austin, Texas."
+Output: [{"type": "DATE_TIME", "text": "1990-03-14", "start": 16, "end": 26}, {"type": "LOCATION", "text": "Austin, Texas", "start": 40, "end": 53}]
+
+Text: "No personal information here."
+Output: []
+
+## Text to Analyze
+
+{text}

@@ -1,4 +1,11 @@
 # PII Agent Skills Ablation Study Configuration
+#
+# This is the MASTER study config (read by the notebooks as the single source of truth).
+# It is NOT the same as the flat per-run configs in the config/ folder:
+#   - config.yaml (here, repo root) = nested master config, incl. the `harness:` section below.
+#   - config/*.yaml                 = flat single-run configs for the CLI (--config), e.g.
+#                                     config/rr_scaling.yaml, config/rr_fp16.yaml.
+# See "Configuration files" in README.md.
 
 experiment:
   name: "pii-skills-ablation"

@@ -4,7 +4,7 @@ authors:
   - family-names: Rosado
     given-names: Eidan J.
     orcid: https://orcid.org/0000-0003-0665-098X
-title: "When Parametric Knowledge Wins: A Controlled Ablation of Agent Skills and Tool Use for PII Detection in Small Language Models"
+title: "When Parametric Knowledge Wins: Evaluation Shapes Tool-Augmented PII Detection in Small Language Models"
 version: 0.1.0
 repository-code: "https://github.com/EdyVision/pii-skills-ablation-study"
 keywords:

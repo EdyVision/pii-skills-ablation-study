@@ -99,6 +99,20 @@ def main(
             "PII-Codex not available — with_tools/with_skills will run without tool execution"
         )
 
+    # with_tools / with_skills require a skill runner. AblationRunner sets this automatically;
+    # the bare CLI must too, or those conditions raise. (zero_shot/with_docs don't need it.)
+    if getattr(config, "with_skills_runner", None) is None:
+        try:
+            from skill_agent import run_skill_agent
+
+            config.with_skills_runner = run_skill_agent
+            print("Skill runner wired (with_tools/with_skills enabled)")
+        except ImportError as e:
+            print(
+                f"Warning: skill_agent unavailable ({e}); with_tools/with_skills will fail. "
+                "Install deps or run only --conditions zero_shot with_docs."
+            )
+
     results = run_experiments(config, samples, prompts, registry)
 
     if config.label_map_path and config.label_map_path.exists():
@@ -108,6 +122,10 @@ def main(
                 r["predictions"], r.get("ground_truth", []), label_map
             )
         print(f"Scored {len(results)} results")
+        # Persist the scored results so the local file has scores too (CLI parity with AblationRunner).
+        from ablation_harness.runner import save_results_to_disk
+
+        save_results_to_disk(config, results)
 
     print(f"Done. {len(results)} results saved.")
 

@@ -1,0 +1,57 @@
+# R&R full-precision check — the four original models at full precision (fp16/bf16),
+# on a stratified SUBSAMPLE, to rule out 4-bit quantization as the cause (reviewer Q5).
+#
+# SAFETY / ADDITIVE: writes to results/past_runs/fp16/, run_type fp16 (Hub split would be
+# fp16_v1), push_to_hub false. The original 4-bit `main` run is never touched.
+#
+# Memory: models load ONE AT A TIME (the harness unloads between models), so peak is a single
+# ~16-18 GB fp16 model — comfortable on 64 GB. Run on a subsample (data/samples_sub300.json).
+
+hardware: mlx
+
+models:
+  - gemma2_9b
+  - llama3_8b
+  - mistral_7b
+  - qwen2_7b
+model_configs:
+  gemma2_9b:
+    hf: google/gemma-2-9b-it
+    mlx: mlx-community/gemma-2-9b-it-fp16
+  llama3_8b:
+    hf: meta-llama/Meta-Llama-3.1-8B-Instruct
+    mlx: mlx-community/Meta-Llama-3.1-8B-Instruct-bf16
+  mistral_7b:
+    hf: mistralai/Mistral-7B-Instruct-v0.3
+    mlx: mlx-community/Mistral-7B-Instruct-v0.3        # unquantized base = full precision
+  qwen2_7b:
+    hf: Qwen/Qwen2.5-7B-Instruct
+    mlx: mlx-community/Qwen2.5-7B-Instruct-bf16
+
+conditions:
+  - zero_shot
+  - with_docs
+  - with_tools
+  - with_skills
+
+results_dir: results/past_runs/fp16
+run_type: fp16
+push_to_hub: false
+hub_repo: ""
+
+prompts_dir: prompts
+skills_dir: skills
+label_map_path: config/pii_label_to_piicodex.json
+
+seed: 42
+prompt_version: v1
+
+max_tokens: 1024
+max_turns: 5
+max_seconds_per_sample: 300
+batch_size: 8           # a touch smaller than 4-bit since fp16 activations are larger
+batch_size_parallel: 8
+multi_turn_workers: 1
+verbose_skill_loop: true
+purge_hf_cache_after_model: true   # delete each fp16 model's ~14-18 GB weights after use so the cache doesn't fill the disk
+debug: false

@@ -89,7 +89,7 @@ def run_single_experiment(
     model_name: str | None = None,
 ) -> dict:
     """Run experiment on a single sample."""
-    prompt = prompts[condition].format(text=sample["text"])
+    prompt = prompts[condition].replace("{text}", sample["text"])
 
     try:
         custom_runner = getattr(config, "with_skills_runner", None)
@@ -146,8 +146,8 @@ def _run_conditions_batch(
     for condition in conditions:
         condition_results: list[dict] = []
 
-        # zero_shot and with_docs always use batched path (batch_size); with_tools/with_skills use custom runner.
-        if condition in ("zero_shot", "with_docs"):
+        # Single-turn conditions use the batched path (batch_size); with_tools/with_skills use custom runner.
+        if condition in ("zero_shot", "with_docs", "few_shot", "cot"):
             chunks = [
                 [samples[i + j] for j in range(min(bs, len(samples) - i))]
                 for i in range(0, len(samples), bs)
@@ -155,7 +155,7 @@ def _run_conditions_batch(
 
             for chunk in chunks:
                 chunk_prompts = [
-                    prompts[condition].format(text=s["text"]) for s in chunk
+                    prompts[condition].replace("{text}", s["text"]) for s in chunk
                 ]
                 t0 = time.perf_counter()
                 try:
@@ -520,7 +520,7 @@ def run_experiments(
         for condition in run_conditions:
             bs_arg = (
                 bs_override
-                if bs_override and condition in ("zero_shot", "with_docs")
+                if bs_override and condition in ("zero_shot", "with_docs", "few_shot", "cot")
                 else None
             )
             condition_results = _run_conditions_batch(
@@ -567,6 +567,8 @@ def run_experiments(
         )
 
         model.unload()
+        if getattr(config, "purge_hf_cache_after_model", False):
+            model.purge_cache()  # frees disk between models on big full-precision runs
         gc.collect()
         del model
 

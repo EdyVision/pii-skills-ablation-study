@@ -27,6 +27,29 @@ class ModelInference:
         if hasattr(self, "_generate_fn"):
             del self._generate_fn
 
+    def purge_cache(self):
+        """Delete this model's downloaded weights from the HF cache (frees DISK, not RAM).
+
+        Use between models on big full-precision runs so the cache does not balloon
+        (e.g. four fp16 models = ~60 GB). Safe: weights re-download on next use.
+        """
+        import os
+        import shutil
+
+        model_id = self.model_config.get("mlx" if self.hardware == "mlx" else "hf")
+        if not model_id:
+            return
+        try:
+            from huggingface_hub.constants import HF_HUB_CACHE
+
+            folder = "models--" + model_id.replace("/", "--")
+            path = os.path.join(HF_HUB_CACHE, folder)
+            if os.path.isdir(path):
+                shutil.rmtree(path, ignore_errors=True)
+                print(f"Purged HF cache for {model_id} (freed disk)")
+        except Exception as e:  # never let cleanup crash a run
+            print(f"(cache purge skipped for {model_id}: {e})")
+
     def _load_mlx(self, model_id: str):
         """Load model with MLX."""
         from mlx_lm import load

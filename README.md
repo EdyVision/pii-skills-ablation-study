@@ -1,10 +1,12 @@
 # PII Agent Skills Ablation Study
 
-An ablation study measuring whether structured knowledge documents (Agent Skills) improve LLM performance on PII detection tasks compared to zero-shot prompting or basic documentation.
+**Paper:** *When Parametric Knowledge Wins: Evaluation Shapes Tool-Augmented PII Detection in Small Language Models*
+
+Accompanying code, notebooks, and data for a controlled ablation study of whether structured knowledge documents (Agent Skills), documentation injection, and tool access improve small language model performance on PII detection — and how label alignment and evaluation granularity shape those conclusions.
 
 ## Research Question
 
-**Does injecting Agent Skills into LLM context improve PII detection accuracy compared to zero-shot prompting or library documentation?**
+**Does injecting Agent Skills, documentation, or tool access into SLM context improve PII detection accuracy compared to zero-shot prompting — and when do apparent gains or losses reflect measurement artifacts rather than true capability differences?**
 
 ## Experimental Design
 
@@ -22,6 +24,8 @@ This design allows us to measure:
 - **Main effect of tool access**: `+Tool` vs `Zero-shot`
 - **Interaction effect**: Whether documentation and tools together provide synergistic benefits beyond their individual contributions
 
+**Baselines and controls.** Beyond the four-condition ablation, the study adds three reference baselines (a standalone PII-Codex detector with no model, few-shot prompting, and chain-of-thought prompting) and two robustness controls that test whether any effect is scale- or precision-bound: a larger model (Qwen 2.5 14B) and a full-precision (fp16/bf16) re-run of the four models.
+
 ## Models
 
 Open-weight instruction-tuned models (~7-9B); same prompts and chat-template formatting for all (no model-specific scaffolding).
@@ -32,6 +36,9 @@ Open-weight instruction-tuned models (~7-9B); same prompts and chat-template for
 | Llama 3.1 Instruct | 8B | MLX (Mac) / CPU |
 | Mistral Instruct v0.3 | 7B | MLX (Mac) / CPU |
 | Qwen 2.5 Instruct | 7B | MLX (Mac) / CPU |
+| Qwen 2.5 Instruct *(14B scale control)* | 14B | MLX (Mac) / CPU |
+
+The four 7–9B models are the primary set; Qwen 2.5 14B is a scale control, and a full-precision (fp16/bf16) re-run of the four primary models on a 300-sample subset is a precision control (see `config/rr_scaling.yaml`, `config/rr_fp16.yaml`).
 
 Hardware is auto-detected: **MLX** on Darwin/arm64 (Mac), else **CPU**. CUDA is not yet supported (future research). Each model is unloaded before the next loads to avoid OOM when running all four locally.
 
@@ -69,9 +76,19 @@ Notebook 1 builds a **dehydrated** benchmark (indices + labels only; text is hyd
 
 ## Metrics
 
-- **F1 Score** (primary)
-- **Precision** and **Recall**
+- **Two co-primary metrics**: entity-type match and span match (character IoU ≥ 0.5)
+- **F1 Score**, **Precision**, and **Recall** under each metric
+- A single **symmetric label-alignment** map applied identically to predictions and ground truth
 - Per-condition and per-dataset breakdowns
+
+## Configuration files
+
+There are two kinds of config, in two places — same `HarnessConfig` underneath, different delivery:
+
+- **`config.yaml` (repo root)** — the master study config (datasets, repos, sampling, models, and a nested `harness:` section). The notebooks read this as the single source of truth (`HarnessConfig.from_repo_config`).
+- **`config/*.yaml` (the `config/` folder)** — flat, single-run configs passed to the CLI with `--config` (`HarnessConfig.from_yaml`). The harness also auto-discovers `config/<hardware>.yaml` here. The R&R run configs (`config/rr_baselines.yaml`, `config/rr_scaling.yaml`, `config/rr_fp16.yaml`) live here, alongside the label map (`config/pii_label_to_piicodex.json`).
+
+Rule of thumb: edit `config.yaml` for the study defaults; add a flat `config/<name>.yaml` for a one-off run (e.g. a new model or precision) and point the CLI at it.
 
 ## Quick Start
 
@@ -83,6 +100,7 @@ The notebooks are standalone and install their own dependencies. Run directly in
 | `02_ablation_study.ipynb` | Run experiments (pilot or main) |
 | `03_analyses_main.ipynb` | Score, visualize, upload (main study, n=2,000) |
 | `03_analyses_pilot.ipynb` | Score, visualize, upload (pilot, n=200) |
+| `04_analyses_r&r.ipynb` | Revise & resubmit analyses: symmetric alignment, dual (type/span) metrics, detector/few-shot/CoT baselines, and 14B + fp16 controls |
 
 **Prerequisites:**
 - Run `huggingface-cli login` or set `HF_TOKEN` environment variable
@@ -100,8 +118,8 @@ To test different prompt versions (e.g., after improving documentation):
 
 | Repo | Contents | Created by |
 |------|----------|------------|
-| `EdyVision/pii-skills-ablation` | Benchmark (sample indices + ground truth) and config (prompts, config.yaml, pii_label_to_piicodex.json under `config/`) | Notebook 1 |
-| `EdyVision/pii-skills-ablation-results` | Model predictions + scores | Notebook 2 |
+| [`EdyVision/pii-skills-ablation`](https://huggingface.co/datasets/EdyVision/pii-skills-ablation) | Benchmark (sample indices + ground truth) and config (prompts, config.yaml, pii_label_to_piicodex.json under `config/`) | Notebook 1 |
+| [`EdyVision/pii-skills-ablation-results`](https://huggingface.co/datasets/EdyVision/pii-skills-ablation-results) | Model predictions + scores (splits: `main_v1`, `pilot_v1`, `baselines_v1`, `detector_v1`, `fp16_v1`, `scaling_v1`) | Notebooks 2 & `04_analyses_r&r` |
 
 ## PII in Results
 
@@ -116,6 +134,25 @@ Due to licensing restrictions, the benchmark dataset stores **sample indices onl
 3. **Requirements**: Users must have access to original datasets (accept terms where required)
 
 This approach is standard practice for research involving restricted datasets.
+
+## Citation
+
+If you use this code, the benchmark, or the results, please cite the paper:
+
+```bibtex
+@article{rosado2026context,
+  title   = {When Parametric Knowledge Wins: Evaluation Shapes Tool-Augmented PII Detection in Small Language Models},
+  author  = {Rosado, Eidan J.},
+  year    = {2026}
+}
+```
+
+Datasets:
+
+- **Benchmark:** [EdyVision/pii-skills-ablation](https://huggingface.co/datasets/EdyVision/pii-skills-ablation)
+- **Scored results:** [EdyVision/pii-skills-ablation-results](https://huggingface.co/datasets/EdyVision/pii-skills-ablation-results)
+
+When using the benchmark, please also cite the source datasets (AI4Privacy PII-Masking-300K, NVIDIA Nemotron-PII, Gretel PII Masking); their BibTeX is in the [benchmark dataset card](https://huggingface.co/datasets/EdyVision/pii-skills-ablation). A `CITATION.cff` is included for GitHub's "Cite this repository" button.
 
 ## License
 
