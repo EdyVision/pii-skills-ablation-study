@@ -1,6 +1,6 @@
 # PII Agent Skills Ablation Study
 
-**Paper:** *When Parametric Knowledge Wins: Evaluation Shapes Tool-Augmented PII Detection in Small Language Models*
+**Paper:** *Asymmetry, Not Capability: Evaluation Shapes Tool-Augmented PII Detection in Small Language Models*
 
 Accompanying code, notebooks, and data for a controlled ablation study of whether structured knowledge documents (Agent Skills), documentation injection, and tool access improve small language model performance on PII detection — and how label alignment and evaluation granularity shape those conclusions.
 
@@ -141,7 +141,7 @@ If you use this code, the benchmark, or the results, please cite the paper:
 
 ```bibtex
 @article{rosado2026context,
-  title   = {When Parametric Knowledge Wins: Evaluation Shapes Tool-Augmented PII Detection in Small Language Models},
+  title   = {Asymmetry, Not Capability: Evaluation Shapes Tool-Augmented PII Detection in Small Language Models},
   author  = {Rosado, Eidan J.},
   year    = {2026}
 }
