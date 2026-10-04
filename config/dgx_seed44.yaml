@@ -1,0 +1,31 @@
+hardware: cuda
+models: [gemma2_9b, llama3_8b, mistral_7b, qwen2_7b]
+model_configs:
+  gemma2_9b: {hf: google/gemma-2-9b-it}
+  llama3_8b: {hf: meta-llama/Meta-Llama-3.1-8B-Instruct}
+  mistral_7b: {hf: mistralai/Mistral-7B-Instruct-v0.3}
+  qwen2_7b: {hf: Qwen/Qwen2.5-7B-Instruct}
+conditions: [zero_shot, with_docs, with_tools, with_skills]
+results_dir: results/rerun/dgx_seed44
+run_type: dgx_seed_sensitivity
+run_id: dgx_seed44
+seed: 44
+do_sample: true
+temperature: 0.2
+top_p: 0.95
+resolve_offsets: true
+torch_dtype: bfloat16
+torch_compile: false
+prompts_dir: prompts
+skills_dir: skills
+label_map_path: config/pii_label_to_piicodex.json
+prompt_version: v1
+push_to_hub: false
+hub_repo: ""
+max_tokens: 1024
+max_turns: 5
+batch_size: 12
+batch_size_parallel: 12
+multi_turn_workers: 1
+max_seconds_per_sample: 300
+debug: false

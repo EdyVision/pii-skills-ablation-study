@@ -1,0 +1,9 @@
+condition,model,tool fired,%,mean turns
++Tool,gemma2_9b,2000/2000,100.0,2.0
++Tool,llama3_8b,2000/2000,100.0,2.01
++Tool,mistral_7b,1999/2000,100.0,2.0
++Tool,qwen2_7b,2000/2000,100.0,2.01
++Skills,gemma2_9b,2000/2000,100.0,3.99
++Skills,llama3_8b,2000/2000,100.0,3.95
++Skills,mistral_7b,1999/2000,100.0,2.02
++Skills,qwen2_7b,2000/2000,100.0,2.38

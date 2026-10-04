@@ -1,0 +1,4 @@
+source,samples/model,span-bearing
+ai4privacy,1132,yes
+gretel_pii_masking,581,no (span metric == type metric)
+nvidia_nemotron_pii,287,no (span metric == type metric)

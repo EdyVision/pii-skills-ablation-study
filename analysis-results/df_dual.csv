@@ -1,0 +1,5 @@
+metric,align,Zero-shot,+Docs,+Tool,+Skills,ZS−Tool
+type,before,0.572,0.526,0.403,0.39,0.169
+type,after,0.631,0.602,0.527,0.511,0.104
+span,before,0.299,0.256,0.339,0.333,-0.04
+span,after,0.325,0.301,0.455,0.448,-0.13

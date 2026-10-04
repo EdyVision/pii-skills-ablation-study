@@ -1,0 +1,17 @@
+model,condition,n,mean_f1,std_f1,ci_low,ci_high,margin,sufficient,required_n
+gemma2_9b,with_docs,200,0.6131,0.2777,0.5743,0.6518,0.0387,True,120
+gemma2_9b,with_skills,200,0.5106,0.2689,0.4731,0.5481,0.0375,True,113
+gemma2_9b,with_tools,200,0.5112,0.2692,0.4737,0.5487,0.0375,True,113
+gemma2_9b,zero_shot,200,0.587,0.3135,0.5433,0.6308,0.0437,True,153
+llama3_8b,with_docs,200,0.4843,0.3544,0.4349,0.5337,0.0494,True,196
+llama3_8b,with_skills,200,0.4932,0.2798,0.4542,0.5322,0.039,True,122
+llama3_8b,with_tools,200,0.5549,0.2776,0.5162,0.5936,0.0387,True,120
+llama3_8b,zero_shot,200,0.6641,0.3158,0.62,0.7081,0.044,True,156
+mistral_7b,with_docs,200,0.5617,0.2963,0.5204,0.6031,0.0413,True,137
+mistral_7b,with_skills,200,0.5365,0.2711,0.4987,0.5744,0.0378,True,115
+mistral_7b,with_tools,200,0.5365,0.2711,0.4987,0.5744,0.0378,True,115
+mistral_7b,zero_shot,200,0.5536,0.3109,0.5103,0.597,0.0433,True,151
+qwen2_7b,with_docs,200,0.6213,0.2814,0.5821,0.6605,0.0392,True,124
+qwen2_7b,with_skills,200,0.4893,0.2811,0.4501,0.5285,0.0392,True,123
+qwen2_7b,with_tools,200,0.5007,0.2885,0.4604,0.5409,0.0402,True,130
+qwen2_7b,zero_shot,200,0.6154,0.3404,0.568,0.6629,0.0475,True,181

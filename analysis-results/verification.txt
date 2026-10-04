@@ -1,0 +1,1 @@
+Verification: 98 tests pass and all three analysis notebooks execute without errors. Current CSVs and figures use the explicit saved_analysis contract. Historical raw responses are unavailable; no inference was rerun.

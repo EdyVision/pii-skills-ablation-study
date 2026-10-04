@@ -1,0 +1,17 @@
+model,condition,type,span,strict
+Gemma 2 9B,Zero-shot,0.568,0.045,0.0002
+Gemma 2 9B,+Docs,0.604,0.044,0.0018
+Gemma 2 9B,+Tool,0.513,0.397,0.3634
+Gemma 2 9B,+Skills,0.514,0.398,0.3639
+Llama 3.1 8B,Zero-shot,0.634,0.038,0.0003
+Llama 3.1 8B,+Docs,0.474,0.028,0.0
+Llama 3.1 8B,+Tool,0.567,0.41,0.3653
+Llama 3.1 8B,+Skills,0.49,0.372,0.3384
+Mistral 7B,Zero-shot,0.527,0.035,0.0008
+Mistral 7B,+Docs,0.542,0.027,0.0009
+Mistral 7B,+Tool,0.519,0.381,0.3489
+Mistral 7B,+Skills,0.518,0.382,0.3491
+Qwen 2.5 7B,Zero-shot,0.593,0.04,0.0012
+Qwen 2.5 7B,+Docs,0.644,0.038,0.0011
+Qwen 2.5 7B,+Tool,0.48,0.382,0.3481
+Qwen 2.5 7B,+Skills,0.478,0.406,0.3697

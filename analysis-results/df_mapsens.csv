@@ -1,0 +1,5 @@
+label map,type ZS,type +Tool,type ZS−Tool,span ZS,span +Tool,span ZS−Tool,inversion holds
+full map,0.631,0.527,0.104,0.325,0.455,-0.131,yes
+no ADDRESS≡LOCATION,0.611,0.484,0.127,0.319,0.421,-0.102,yes
+no DATE≡DATE_TIME,0.595,0.428,0.168,0.308,0.368,-0.06,yes
+neither bridge,0.576,0.385,0.191,0.303,0.334,-0.031,yes

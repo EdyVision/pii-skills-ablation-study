@@ -1,0 +1,20 @@
+[
+  {
+    "id": "test_001",
+    "text": "Contact John Smith at john.smith@email.com or call 555-123-4567.",
+    "source": "test",
+    "ground_truth": "[{\"type\": \"PERSON\", \"text\": \"John Smith\", \"start\": 8, \"end\": 18}, {\"type\": \"EMAIL_ADDRESS\", \"text\": \"john.smith@email.com\", \"start\": 22, \"end\": 42}, {\"type\": \"PHONE_NUMBER\", \"text\": \"555-123-4567\", \"start\": 51, \"end\": 63}]"
+  },
+  {
+    "id": "test_002",
+    "text": "No personal information in this text about weather patterns.",
+    "source": "test",
+    "ground_truth": "[]"
+  },
+  {
+    "id": "test_003",
+    "text": "SSN: 123-45-6789, born on 1990-01-15 in New York.",
+    "source": "test",
+    "ground_truth": "[{\"type\": \"US_SOCIAL_SECURITY_NUMBER\", \"text\": \"123-45-6789\", \"start\": 5, \"end\": 16}, {\"type\": \"DATE_TIME\", \"text\": \"1990-01-15\", \"start\": 26, \"end\": 36}, {\"type\": \"LOCATION\", \"text\": \"New York\", \"start\": 40, \"end\": 48}]"
+  }
+]

@@ -1,0 +1,47 @@
+# R&R scaling run — Qwen2.5-14B (4-bit), all four conditions, full 2,000 samples.
+# Answers reviewer Q4 (does the zero-shot advantage hold with scale?).
+#
+# SAFETY / ADDITIVE GUARANTEES (see why each matters):
+#   models:      ONLY qwen2_14b  -> the existing 4-bit models are never re-run.
+#   results_dir: results/past_runs/scaling  -> separate local file (folder == run_type); main/ untouched.
+#   run_type:    scaling           -> Hub split would be scaling_v1, never main_v1.
+#   push_to_hub: false (+ blank hub_repo) -> no Hub writes at all; inspect locally first, push yourself.
+#
+# Flat HarnessConfig YAML (loaded via --config; from_yaml reads top-level keys only).
+
+hardware: mlx
+
+models:
+  - qwen2_14b
+model_configs:
+  qwen2_14b:
+    hf: Qwen/Qwen2.5-14B-Instruct
+    mlx: mlx-community/Qwen2.5-14B-Instruct-4bit
+
+conditions:
+  - zero_shot
+  - with_docs
+  - with_tools
+  - with_skills
+
+results_dir: results/past_runs/scaling
+run_type: scaling
+push_to_hub: false
+hub_repo: ""
+
+prompts_dir: prompts
+skills_dir: skills
+label_map_path: config/pii_label_to_piicodex.json
+
+seed: 42
+prompt_version: v1
+
+# Generation / loop settings (match the MLX profile used for the main run)
+max_tokens: 1024
+max_turns: 5
+max_seconds_per_sample: 300
+batch_size: 12
+batch_size_parallel: 12
+multi_turn_workers: 1   # 1 for MLX to avoid OOM on the multi-turn conditions
+verbose_skill_loop: true
+debug: false

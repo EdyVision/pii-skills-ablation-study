@@ -1,0 +1,13 @@
+model,vs ZS,ΔF1,Cohen dz,p
+gemma2_9b,+Docs,0.011,0.04,7.1e-02
+gemma2_9b,+Tool,-0.099,-0.27,6.1e-32
+gemma2_9b,+Skills,-0.098,-0.27,1.8e-31
+llama3_8b,+Docs,-0.149,-0.37,2.1e-57
+llama3_8b,+Tool,-0.108,-0.32,4.7e-44
+llama3_8b,+Skills,-0.172,-0.49,5.3e-95
+mistral_7b,+Docs,0.009,0.03,1.8e-01
+mistral_7b,+Tool,-0.056,-0.16,2.0e-12
+mistral_7b,+Skills,-0.056,-0.16,1.3e-12
+qwen2_7b,+Docs,0.012,0.04,9.2e-02
+qwen2_7b,+Tool,-0.152,-0.4,1.3e-67
+qwen2_7b,+Skills,-0.156,-0.42,8.8e-72

@@ -1,0 +1,20 @@
+# pii-detection skill
+
+## When to use
+When asked to detect, identify, or redact personally identifiable information (PII).
+
+## Available tool
+- `analyze_pii`: Detects PII entities and returns sanitized text. Call with: [TOOL_CALL: analyze_pii]
+
+## PII types detected
+PERSON, LOCATION, DATE, DATE_TIME, PHONE_NUMBER, US_SOCIAL_SECURITY_NUMBER, US_PASSPORT_NUMBER, GENDER, EMAIL_ADDRESS, CREDIT_CARD, IP_ADDRESS, URL
+
+## Workflow
+1. Call [TOOL_CALL: analyze_pii] to get detections and sanitized text
+2. Format output as: JSON array of detections, then sanitized text
+
+## Output format
+```json
+[{{"type": "PERSON", "text": "John Smith", "start": 0, "end": 10}}]
+```
+Then the sanitized text with PII replaced by type labels like [PERSON], [PHONE_NUMBER].
